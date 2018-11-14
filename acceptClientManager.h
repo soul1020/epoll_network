@@ -14,6 +14,7 @@ class AcceptClientManager
 				Client* Find(int fd);
 				bool Insert(int fd, int epfd);
 				bool Erase(int fd);
+				void ForEachItem();
 		public:
 				AcceptClientManager* GetInstance();
 		private:

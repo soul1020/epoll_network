@@ -8,6 +8,22 @@ AcceptClientManager::AcceptClientManager()
 AcceptClientManager::~AcceptClientManager()
 {}
 
+void AcceptClientManager::ForEachItem()
+{
+		m_mutex.Lock();
+		for(std::map<int, Client*>::iterator it=m_acceptClientMap.begin(); it!=m_acceptClientMap.end(); it++)
+		{
+				time_t time_now = time(NULL);
+				int seconds = time_now - it->second->GetClientTime();
+				if(seconds > 20)
+				{
+						delete it->second;
+						m_acceptClientMap.erase(it);
+				}
+		}
+		m_mutex.UnLock();
+}
+
 Client* AcceptClientManager::Find(int fd)
 {
 		m_mutex.Lock();
