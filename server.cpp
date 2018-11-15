@@ -1,4 +1,6 @@
 #include "server.h"
+#include "acceptClientManager.h"
+#include "listClientManager.h"
 
 void setnonblocking(int sock)
 {
@@ -67,10 +69,16 @@ void Server::InitServer()
 								int client_fd = AcceptClient(server_fd, epfd);
 								if(client_fd == -1) continue;
 								std::cout << "accept a new client" << std::endl;
+								AcceptClientManager::GetInstance()->Insert(client_fd, epfd);
 								//new a client add this client to map
 						}
 						else if(events[i].events & EPOLLIN)
 						{
+								int client_fd =  events[i].data.fd;
+								if(client_fd == -1) continue;
+								Client *client = AcceptClientManager::GetInstance()->Find(client_fd);
+								if(client == NULL) continue;
+								ListClientManager::GetInstance()->Push(client);
 								//find a client in map and insert to list
 						}
 				}

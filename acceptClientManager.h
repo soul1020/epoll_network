@@ -16,7 +16,7 @@ class AcceptClientManager
 				bool Erase(int fd);
 				void ForEachItem();
 		public:
-				AcceptClientManager* GetInstance();
+				static AcceptClientManager* GetInstance();
 		private:
 				std::map<int, Client*>	m_acceptClientMap;
 				Mutex	m_mutex;
