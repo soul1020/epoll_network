@@ -17,7 +17,10 @@ void AcceptClientManager::ForEachItem()
 				int seconds = time_now - it->second->GetClientTime();
 				if(seconds > 20)
 				{
-						delete it->second;
+						if(it->second)
+						{
+								delete it->second;
+						}
 						m_acceptClientMap.erase(it);
 				}
 		}
@@ -49,7 +52,10 @@ bool AcceptClientManager::Insert(int fd, int epfd)
 		else
 		{
 				Client *client = new Client(fd, epfd);
-				m_acceptClientMap[fd] = client;
+				if(client)
+				{
+						m_acceptClientMap[fd] = client;
+				}
 		}
 		m_mutex.UnLock();
 		return true;
@@ -66,7 +72,10 @@ bool AcceptClientManager::Erase(int fd)
 		}
 		else
 		{
-				delete it->second;
+				if(it->second)
+				{
+						delete it->second;
+				}
 				m_acceptClientMap.erase(it);
 		}       
 		m_mutex.UnLock();
