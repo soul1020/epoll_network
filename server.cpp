@@ -1,6 +1,7 @@
 #include "server.h"
 #include "acceptClientManager.h"
 #include "listClientManager.h"
+#include "progressThread.h"
 
 void setnonblocking(int sock)
 {
@@ -46,6 +47,9 @@ int Server::CreateServerSocket(const std::string &ip, const int &port)
 
 void Server::InitServer()
 {
+		ProgressThread progress;
+		progress.Run();
+
 		int server_fd = CreateServerSocket("127.0.0.1", 9999);
 		if(server_fd == -1) return;
 
