@@ -33,7 +33,12 @@ void *ProgressThread::Runtine(void *arg)
 				//recv body
 				char *buf = new char[pHeader.bodySize];
 				memset(buf, 0, pHeader.bodySize);
-				if(!client->Recv(buf, pHeader.bodySize)) continue;
+				if(!client->Recv(buf, pHeader.bodySize)) 
+				{
+						delete buf;
+						buf = NULL;
+						continue;
+				}
 
 				Message *message = new Message;
 				message->m_header = pHeader;
