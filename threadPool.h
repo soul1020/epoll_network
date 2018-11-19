@@ -28,11 +28,11 @@ class ThreadPool
 				static pthread_mutex_t  m_mutex;
 				static pthread_cond_t   m_cond;
 
-				vector<pthread_t>       m_idle_list;
-				vector<pthread_t>       m_busy_list;
+				//vector<pthread_t>       m_idle_list;
+				//vector<pthread_t>       m_busy_list;
 
-				pthread_mutex_t         m_idle_mutex;
-				pthread_mutex_t			m_busy_mutex;
+				//pthread_mutex_t         m_idle_mutex;
+				//pthread_mutex_t			m_busy_mutex;
 };
 #endif
 

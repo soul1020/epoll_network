@@ -2,14 +2,14 @@
 #include <algorithm>
 
 vector<Task*> ThreadPool::m_task_v;
-pthread_mutex_t ThreadPool::m_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t ThreadPool::m_cond = PTHREAD_COND_INITIALIZER;
+//pthread_mutex_t ThreadPool::m_mutex = PTHREAD_MUTEX_INITIALIZER;
+//pthread_cond_t ThreadPool::m_cond = PTHREAD_COND_INITIALIZER;
 
 
 ThreadPool::ThreadPool(int thread_num)
 {
-		pthread_mutex_init(&m_idle_mutex, NULL);
-		pthread_mutex_init(&m_busy_mutex, NULL);
+		//pthread_mutex_init(&m_idle_mutex, NULL);
+		//pthread_mutex_init(&m_busy_mutex, NULL);
 		m_thread_num = thread_num;
 		m_tid = new pthread_t[m_thread_num];
 		Create();
@@ -46,10 +46,12 @@ void* ThreadPool::routine(void *s)
 				}
 				vector<Task*>::iterator it = m_task_v.begin();
 				Task *task = *it;
+				if(task == NULL) continue;
 				m_task_v.erase(it);
 				pthread_mutex_unlock(&m_mutex);
 				task->run();
 				delete task;
+				task = NULL;
 				cout << "delete task success" << endl;
 				ThreadPool *pool = (ThreadPool*)s;
 				if(pool)
