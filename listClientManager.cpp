@@ -19,6 +19,11 @@ Client* ListClientManager::Pop()
 {
 		m_mutex.Lock();
 		Client *client = m_clientList.front();
+		if(client == NULL)
+		{
+				m_mutex.UnLock();
+				return NULL;
+		}
 		m_clientList.pop_front();
 		m_mutex.UnLock();
 		return client;
