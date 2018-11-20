@@ -1,38 +1,39 @@
-#ifndef THREAD_POOL_H_
-#define THREAD_POOL_H_
+#ifndef THREADPOOL_H
+#define THREADPOOL_H
 
-#include "task.h"
 
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
+#include<iostream>
+#include<pthread.h>
+#include<cstdlib>
+#include<cassert>
+#include<cstdio>
+#include<deque>
+
+using namespace std;
+
+struct Job
+{
+		void* (*doJobFun)(void *arg);    //线程回调函数
+		void *arg;                                //回调函数参数
+
+};
 
 class ThreadPool
 {
+		unsigned int threadNum;                   //线程池中开启线程的个数
+		unsigned int maxJobNum;                //队列中最大job的个数
+		deque<Job> jobQueue;				//任务队列
+		pthread_t *pthreads;              //线程池中所有线程的pthread_t
+		pthread_mutex_t mutex;            //互斥信号量
+		pthread_cond_t condQueueEmpty;       //队列为空的条件变量
+		pthread_cond_t condQueueFull;    //队列为满的条件变量
+		bool isPoolClose;                   //线程池是否已经关闭
+
 		public:
-				ThreadPool(int thread_num);
-				~ThreadPool();
-				void Create();
-				void AddTask(Task *task);
-		private:
-				static void* routine(void *s);
-				void AddToIdleList(pthread_t tid);
-				void MoveToIdleList();
-				void MoveToBusyList();
-		private:
-				int                     m_thread_num;
-				pthread_t*              m_tid;
-				static vector<Task*>	m_task_v;
-				static pthread_mutex_t  m_mutex;
-				static pthread_cond_t   m_cond;
-
-				//vector<pthread_t>       m_idle_list;
-				//vector<pthread_t>       m_busy_list;
-
-				//pthread_mutex_t         m_idle_mutex;
-				//pthread_mutex_t			m_busy_mutex;
+		ThreadPool(int threadNum=10, int maxJobNum=100);
+		int addJob(Job job);
+		int destroy();
+		~ThreadPool();
+		friend void* run(void* arg);
 };
 #endif
-
